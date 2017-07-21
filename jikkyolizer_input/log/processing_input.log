@@ -1,0 +1,52 @@
+item_id=wind raw_value=南 timing=2017-07-17T20:46:06+09:00
+item_id=wind raw_value=南 timing=2017-07-17T20:46:06+09:00
+
+insert into sox_data (raw_value,row_timestamp,item_id) values('南','2017-07-17 20:46:06','=wind');
+group_id=abc,item_id=def
+insert into sox_jikkyolized (item_id,group_id) values('=def','c');
+group_id=abc,item_id=def
+insert into sox_jikkyolized (item_id,group_id) values('def','abc');
+group_id=なごやか亭 運動公園通店,item_id=url
+insert into sox_jikkyolized (item_id,group_id) values('url','なごやか亭 運動公園通店');
+group_id=なごやか亭 運動公園通店,item_id=店舗名
+insert into sox_jikkyolized (group_id,item_id) values('なごやか亭 運動公園通店','店舗名');
+transducer_id=TRANS! raw_value=VALUE! timing=2017-07-17 00:10:20
+transducer_id=TRANS! raw_value=VALUE! timing=2017-07-17 00:10:20
+
+insert into sox_data (raw_value,item_id,row_timestamp) values('VALUE!','r_id=TRANS!','2017-07-17 00:10:20');
+group_id=なごやか亭 運動公園通店,item_id=交通手段
+insert into sox_jikkyolized (group_id,item_id) values('なごやか亭 運動公園通店','交通手段');
+group_id=なごやか亭 運動公園通店,item_id=url
+group_id=なごやか亭 運動公園通店,item_id=url
+group_id=なごやか亭 運動公園通店,item_id=url
+insert into sox_jikkyolized (item_id,group_id) values('url','なごやか亭 運動公園通店');
+group_id=なごやか亭 運動公園通店,item_id=交通手段
+insert into sox_jikkyolized (group_id,item_id) values('なごやか亭 運動公園通店','交通手段');
+group_id=無添くら寿司 - 横浜磯子店,item_id=住所
+insert into sox_jikkyolized (group_id,item_id) values('無添くら寿司 - 横浜磯子店','住所');
+group_id=なごやか亭 運動公園通店,item_id=交通手段
+insert into sox_jikkyolized (item_id,group_id) values('交通手段','なごやか亭 運動公園通店');
+insert into sox_jikkyolized (item_id,group_id) values('456','123');
+group_id=なごやか亭 運動公園通店,item_id=交通手段
+insert into sox_jikkyolized (item_id,group_id) values('交通手段','なごやか亭 運動公園通店');
+insert into sox_jikkyolized (item_id,group_id) values('456','123');
+transducer_id=TRANS! raw_value=VALUE! timing=2017-07-17 00:10:20
+transducer_id=TRANS! raw_value=VALUE! timing=2017-07-17 00:10:20
+
+insert into sox_data (item_id,row_timestamp,raw_value) values('r_id=TRANS!','2017-07-17 00:10:20','VALUE!');
+transducer_id=TRANS! raw_value=VALUE! timing=2017-07-17 00:10:20
+transducer_id=TRANS! raw_value=VALUE! timing=2017-07-17 00:10:20
+
+insert into sox_data (row_timestamp,raw_value,item_id) values('2017-07-17 00:10:20','VALUE!','r_id=TRANS!');
+group_id=なごやか亭 運動公園通店,item_id=交通手段
+insert into sox_jikkyolized (item_id,group_id) values('456','123');
+group_id=なごやか亭 運動公園通店,item_id=交通手段
+insert into sox_jikkyolized (group_id,item_id) values('123','456');
+group_id=なごやか亭 運動公園通店,item_id=交通手段
+insert into sox_jikkyolized (item_id,group_id) values('group_id=なごやか亭 運動公園通店,item_id=交通手段','group_id=なごやか亭 運動公園通店,item_id=交通手段');
+insert into sox_jikkyolized (item_id,group_id) values('456','あああ');
+group_id=なごやか亭 運動公園通店,item_id=交通手段
+insert into sox_jikkyolized (item_id,group_id) values('<class 'str'>','<class 'str'>');
+group_id=なごやか亭 運動公園通店,item_id=交通手段
+insert into sox_jikkyolized (group_id,item_id) values('123','456');
+insert into sox_jikkyolized (group_id,item_id) values('"123"','あああ');
