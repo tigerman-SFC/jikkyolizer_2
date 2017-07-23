@@ -39,3 +39,5 @@ su
 ssh -i /home/amazon/ec2 ec2-user@13.113.192.171
 ssh -i /home/amazon/ec2 ec2-user@13.113.192.171
 ssh -i /home/amazon/ec2 ec2-user@13.113.192.171
+su
+su

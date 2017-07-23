@@ -1,52 +1,46 @@
-item_id=wind raw_value=南 timing=2017-07-17T20:46:06+09:00
-item_id=wind raw_value=南 timing=2017-07-17T20:46:06+09:00
+group_id=無添くら寿司 - 北上尾店 item_id=駐車場 raw_value=VALUE! timing=2017-07-17 00:10:20'
+group_id=無添くら寿司 - 北上尾店 item_id=駐車場 raw_value=VALUE! timing=2017-07-17 00:10:20'
 
-insert into sox_data (raw_value,row_timestamp,item_id) values('南','2017-07-17 20:46:06','=wind');
-group_id=abc,item_id=def
-insert into sox_jikkyolized (item_id,group_id) values('=def','c');
-group_id=abc,item_id=def
-insert into sox_jikkyolized (item_id,group_id) values('def','abc');
-group_id=なごやか亭 運動公園通店,item_id=url
-insert into sox_jikkyolized (item_id,group_id) values('url','なごやか亭 運動公園通店');
-group_id=なごやか亭 運動公園通店,item_id=店舗名
-insert into sox_jikkyolized (group_id,item_id) values('なごやか亭 運動公園通店','店舗名');
-transducer_id=TRANS! raw_value=VALUE! timing=2017-07-17 00:10:20
-transducer_id=TRANS! raw_value=VALUE! timing=2017-07-17 00:10:20
+select * from sox_jikkyolized where item_id='駐車場' and group_id='無添くら寿司 - 北上尾店';
+{'last_0': datetime.datetime(2017, 7, 17, 0, 10, 20), 'string_3': None, 'span_9': None, 'group_id': '無添くら寿司 - 北上尾店', 'string_2': None, 'last_1': None, 'item_id': '駐車場', 'span_8': None, 'span_7': None, 'string_1': None, 'string_6': None, 'last_2': None, 'span_4': None, 'others': None, 'span_6': None, 'total_number': 0, 'string_8': None, 'span_0': None, 'last_6': None, 'span_5': None, 'span_3': None, 'string_4': None, 'string_0': None, 'last_7': None, 'last_3': None, 'last_4': None, 'item_kind': None, 'min_value': None, 'last_8': None, 'string_7': None, 'last_5': None, 'string_5': None, 'string_9': None, 'span_2': None, 'max_value': None, 'span_1': None, 'last_9': None}
+update sox_jikkyolized set last_0='2017-07-17 00:10:20',string_3=None,span_9=0,string_2=None,span_8=0,span_7=0,string_6=None,span_4=0,total_number=1,string_8=None,span_0=1,last_6=None,last_2=None,last_8=None,last_4=None,string_7=None,string_5=None,string_9=None,span_1=0,max_value=None,string_1=None,others=0,span_6=0,span_5=0,span_3=0,span_2=0,string_0='VALUE!',last_7=None,last_3=None,last_1=None,min_value=None,last_5=None,string_4=None,last_9=None where item_id='駐車場' and group_id='無添くら寿司 - 北上尾店'
+group_id=無添くら寿司 - 北上尾店 item_id=駐車場 raw_value=VALUE! timing=2017-07-17 00:10:20'
+group_id=無添くら寿司 - 北上尾店 item_id=駐車場 raw_value=VALUE! timing=2017-07-17 00:10:20'
 
-insert into sox_data (raw_value,item_id,row_timestamp) values('VALUE!','r_id=TRANS!','2017-07-17 00:10:20');
-group_id=なごやか亭 運動公園通店,item_id=交通手段
-insert into sox_jikkyolized (group_id,item_id) values('なごやか亭 運動公園通店','交通手段');
-group_id=なごやか亭 運動公園通店,item_id=url
-group_id=なごやか亭 運動公園通店,item_id=url
-group_id=なごやか亭 運動公園通店,item_id=url
-insert into sox_jikkyolized (item_id,group_id) values('url','なごやか亭 運動公園通店');
-group_id=なごやか亭 運動公園通店,item_id=交通手段
-insert into sox_jikkyolized (group_id,item_id) values('なごやか亭 運動公園通店','交通手段');
-group_id=無添くら寿司 - 横浜磯子店,item_id=住所
-insert into sox_jikkyolized (group_id,item_id) values('無添くら寿司 - 横浜磯子店','住所');
-group_id=なごやか亭 運動公園通店,item_id=交通手段
-insert into sox_jikkyolized (item_id,group_id) values('交通手段','なごやか亭 運動公園通店');
-insert into sox_jikkyolized (item_id,group_id) values('456','123');
-group_id=なごやか亭 運動公園通店,item_id=交通手段
-insert into sox_jikkyolized (item_id,group_id) values('交通手段','なごやか亭 運動公園通店');
-insert into sox_jikkyolized (item_id,group_id) values('456','123');
-transducer_id=TRANS! raw_value=VALUE! timing=2017-07-17 00:10:20
-transducer_id=TRANS! raw_value=VALUE! timing=2017-07-17 00:10:20
+select * from sox_jikkyolized where item_id='駐車場' and group_id='無添くら寿司 - 北上尾店';
+{'others': None, 'last_0': datetime.datetime(2017, 7, 17, 0, 10, 20), 'string_5': None, 'string_3': None, 'last_7': None, 'string_0': None, 'min_value': None, 'string_6': None, 'span_2': None, 'last_4': None, 'last_9': None, 'last_1': None, 'total_number': 0, 'span_5': None, 'last_6': None, 'span_8': None, 'string_8': None, 'string_9': None, 'string_7': None, 'span_7': None, 'group_id': '無添くら寿司 - 北上尾店', 'string_4': None, 'span_3': None, 'span_9': None, 'string_1': None, 'span_1': None, 'last_3': None, 'item_id': '駐車場', 'max_value': None, 'last_2': None, 'span_0': None, 'last_5': None, 'span_4': None, 'span_6': None, 'string_2': None, 'last_8': None, 'item_kind': None}
+update sox_jikkyolized set others=0,last_0='2017-07-17 00:10:20',string_5=null,string_3=null,last_5=null,min_value=None,string_6=null,span_2=0,last_1=null,last_7=null,total_number=1,span_5=0,string_8=null,string_7=null,span_7=0,string_1=null,last_2=null,span_0=1,string_4=null,string_2=null,string_0='VALUE!',last_9=null,last_4=null,last_6=null,span_8=0,string_9=null,span_6=0,span_9=0,span_1=0,max_value=None,span_4=0,span_3=0,last_3=null,last_8=null where item_id='駐車場' and group_id='無添くら寿司 - 北上尾店'
+group_id=無添くら寿司 - 北上尾店 item_id=駐車場 raw_value=VALUE! timing=2017-07-17 00:10:20'
+group_id=無添くら寿司 - 北上尾店 item_id=駐車場 raw_value=VALUE! timing=2017-07-17 00:10:20'
 
-insert into sox_data (item_id,row_timestamp,raw_value) values('r_id=TRANS!','2017-07-17 00:10:20','VALUE!');
-transducer_id=TRANS! raw_value=VALUE! timing=2017-07-17 00:10:20
-transducer_id=TRANS! raw_value=VALUE! timing=2017-07-17 00:10:20
+select * from sox_jikkyolized where item_id='駐車場' and group_id='無添くら寿司 - 北上尾店';
+{'last_3': None, 'item_id': '駐車場', 'last_4': None, 'span_7': None, 'last_5': None, 'span_1': None, 'string_8': None, 'last_9': None, 'string_3': None, 'last_6': None, 'min_value': None, 'span_9': None, 'last_7': None, 'string_9': None, 'item_kind': None, 'span_6': None, 'string_1': None, 'group_id': '無添くら寿司 - 北上尾店', 'span_4': None, 'string_5': None, 'span_3': None, 'span_2': None, 'others': None, 'string_0': None, 'total_number': 0, 'span_0': None, 'last_8': None, 'last_1': None, 'span_5': None, 'string_6': None, 'string_2': None, 'last_2': None, 'last_0': datetime.datetime(2017, 7, 17, 0, 10, 20), 'max_value': None, 'string_4': None, 'span_8': None, 'string_7': None}
+update sox_jikkyolized set last_3=null,max_value=null,span_1=0,last_6=null,last_9=null,string_9=null,total_number=1,span_6=0,string_1=null,string_0='VALUE!',last_0='2017-07-17 00:10:20',string_2=null,last_7=null,last_4=null,span_7=0,last_5=null,string_8=null,string_3=null,min_value=null,span_9=0,span_4=0,string_5=null,span_3=0,span_2=0,others=0,span_0=1,last_8=null,last_1=null,span_5=0,string_6=null,last_2=null,string_4=null,span_8=0,string_7=null where item_id='駐車場' and group_id='無添くら寿司 - 北上尾店'
+group_id=無添くら寿司 - 北上尾店 item_id=駐車場 raw_value=VALUE! timing=2017-07-17 00:10:20'
+group_id=無添くら寿司 - 北上尾店 item_id=駐車場 raw_value=VALUE! timing=2017-07-17 00:10:20'
 
-insert into sox_data (row_timestamp,raw_value,item_id) values('2017-07-17 00:10:20','VALUE!','r_id=TRANS!');
-group_id=なごやか亭 運動公園通店,item_id=交通手段
-insert into sox_jikkyolized (item_id,group_id) values('456','123');
-group_id=なごやか亭 運動公園通店,item_id=交通手段
-insert into sox_jikkyolized (group_id,item_id) values('123','456');
-group_id=なごやか亭 運動公園通店,item_id=交通手段
-insert into sox_jikkyolized (item_id,group_id) values('group_id=なごやか亭 運動公園通店,item_id=交通手段','group_id=なごやか亭 運動公園通店,item_id=交通手段');
-insert into sox_jikkyolized (item_id,group_id) values('456','あああ');
-group_id=なごやか亭 運動公園通店,item_id=交通手段
-insert into sox_jikkyolized (item_id,group_id) values('<class 'str'>','<class 'str'>');
-group_id=なごやか亭 運動公園通店,item_id=交通手段
-insert into sox_jikkyolized (group_id,item_id) values('123','456');
-insert into sox_jikkyolized (group_id,item_id) values('"123"','あああ');
+select * from sox_jikkyolized where item_id='駐車場' and group_id='無添くら寿司 - 北上尾店';
+{'span_4': 0, 'span_1': 0, 'string_6': None, 'group_id': '無添くら寿司 - 北上尾店', 'string_5': None, 'span_0': 1, 'last_4': None, 'last_1': None, 'others': 0, 'string_8': None, 'last_7': None, 'last_8': None, 'span_5': 0, 'span_8': 0, 'string_3': None, 'string_1': None, 'last_0': datetime.datetime(2017, 7, 17, 0, 10, 20), 'item_kind': None, 'string_0': 'VALUE!', 'max_value': None, 'last_3': None, 'item_id': '駐車場', 'span_7': 0, 'total_number': 1, 'span_2': 0, 'last_5': None, 'last_2': None, 'span_6': 0, 'span_3': 0, 'string_7': None, 'string_9': None, 'string_4': None, 'min_value': None, 'last_9': None, 'span_9': 0, 'last_6': None, 'string_2': None}
+group_id=無添くら寿司 - 北上尾店 item_id=駐車場 raw_value=VALUE! timing=2017-07-17 00:10:20'
+group_id=無添くら寿司 - 北上尾店 item_id=駐車場 raw_value=VALUE! timing=2017-07-17 00:10:20'
+
+select * from sox_jikkyolized where item_id='駐車場' and group_id='無添くら寿司 - 北上尾店';
+{'last_7': None, 'last_9': None, 'span_6': 0, 'string_3': None, 'string_0': 'VALUE!', 'others': 0, 'span_7': 0, 'string_9': None, 'last_3': None, 'last_4': None, 'span_9': 0, 'item_kind': None, 'last_0': datetime.datetime(2017, 7, 17, 0, 10, 20), 'string_1': None, 'span_5': 0, 'last_1': None, 'group_id': '無添くら寿司 - 北上尾店', 'item_id': '駐車場', 'span_2': 0, 'min_value': None, 'last_5': None, 'total_number': 1, 'max_value': None, 'last_6': None, 'string_6': None, 'string_5': None, 'span_8': 0, 'string_2': None, 'span_4': 0, 'last_2': None, 'span_0': 1, 'span_1': 0, 'string_7': None, 'string_8': None, 'string_4': None, 'span_3': 0, 'last_8': None}
+update sox_jikkyolized set last_9=null,string_0='VALUE!',others=0,span_7=0,span_9=0,string_1=null,span_5=0,span_2=0,min_value=null,last_5=null,max_value=null,string_9=null,last_1=null,span_4=0,last_2=null,span_0=1,span_1=0,string_7=null,string_4=null,last_8=null,last_7=null,span_6=0,string_3=null,last_4=null,last_3=null,total_number=2,last_6=null,string_5=null,span_8=0,string_2=null,string_6=null,string_8=null,last_0='2017-07-17 00:10:20',span_3=0 where group_id='無添くら寿司 - 北上尾店' and item_id='駐車場'
+group_id=無添くら寿司 - 北上尾店 item_id=駐車場 raw_value=VALUE! timing=2017-07-17 00:10:20'
+group_id=無添くら寿司 - 北上尾店 item_id=駐車場 raw_value=VALUE! timing=2017-07-17 00:10:20'
+
+select * from sox_jikkyolized where item_id='駐車場' and group_id='無添くら寿司 - 北上尾店';
+{'span_3': None, 'span_8': None, 'min_value': None, 'span_7': None, 'span_2': None, 'string_3': None, 'span_9': None, 'string_0': None, 'string_8': None, 'last_7': None, 'span_0': None, 'string_9': None, 'last_0': None, 'item_kind': None, 'last_6': None, 'last_1': None, 'span_4': None, 'string_4': None, 'last_4': None, 'string_6': None, 'last_8': None, 'last_9': None, 'max_value': None, 'last_2': None, 'last_3': None, 'string_2': None, 'group_id': '無添くら寿司 - 北上尾店', 'total_number': 0, 'last_5': None, 'string_1': None, 'string_7': None, 'item_id': '駐車場', 'span_5': None, 'others': None, 'span_6': None, 'string_5': None, 'span_1': None}
+update sox_jikkyolized set span_3=0,string_4=null,min_value=null,span_7=0,span_2=0,string_3=null,span_9=0,last_7=null,span_0=1,span_4=0,last_9=null,max_value=null,last_2=null,last_3=null,string_2=null,total_number=1,last_5=null,others=0,string_5=null,span_1=0,span_8=0,string_0='VALUE!',string_8=null,last_6=null,string_9=null,last_0='2017-07-17 00:10:20',item_kind=str,last_1=null,last_4=null,string_6=null,last_8=null,string_1=null,string_7=null,span_5=0,span_6=0 where group_id='無添くら寿司 - 北上尾店' and item_id='駐車場'
+group_id=駐車場 リパーク日本橋本町４丁目 item_id=longitude raw_value=0.4 timing=2017-07-17 00:10:20'
+group_id=駐車場 リパーク日本橋本町４丁目 item_id=longitude raw_value=0.4 timing=2017-07-17 00:10:20'
+
+select * from sox_jikkyolized where item_id='longitude' and group_id='駐車場 リパーク日本橋本町４丁目';
+{'string_1': None, 'string_4': None, 'group_id': '駐車場 リパーク日本橋本町４丁目', 'item_kind': None, 'span_3': None, 'span_6': None, 'last_2': None, 'span_0': None, 'last_3': None, 'total_number': 0, 'string_7': None, 'span_7': None, 'span_8': None, 'string_5': None, 'last_5': None, 'string_2': None, 'last_8': None, 'last_6': None, 'last_4': None, 'max_value': None, 'string_6': None, 'span_4': None, 'span_5': None, 'last_0': None, 'span_9': None, 'string_8': None, 'string_3': None, 'last_1': None, 'span_2': None, 'item_id': 'longitude', 'last_7': None, 'others': None, 'last_9': None, 'string_0': None, 'min_value': None, 'string_9': None, 'span_1': None}
+group_id=駐車場 リパーク日本橋本町４丁目 item_id=longitude raw_value=0.4 timing=2017-07-17 00:10:20'
+group_id=駐車場 リパーク日本橋本町４丁目 item_id=longitude raw_value=0.4 timing=2017-07-17 00:10:20'
+
+select * from sox_jikkyolized where item_id='longitude' and group_id='駐車場 リパーク日本橋本町４丁目';
+{'total_number': 0, 'span_2': None, 'string_5': None, 'span_7': None, 'last_5': None, 'string_3': None, 'last_2': None, 'string_6': None, 'span_0': None, 'last_3': None, 'string_2': None, 'span_9': None, 'item_id': 'longitude', 'last_7': None, 'span_4': None, 'min_value': None, 'others': None, 'string_9': None, 'max_value': None, 'item_kind': None, 'string_4': None, 'string_0': None, 'group_id': '駐車場 リパーク日本橋本町４丁目', 'last_4': None, 'span_1': None, 'last_9': None, 'string_7': None, 'last_1': None, 'span_5': None, 'last_8': None, 'span_8': None, 'span_6': None, 'span_3': None, 'string_8': None, 'string_1': None, 'last_0': None, 'last_6': None}
+update sox_jikkyolized set string_8=null,string_5=null,span_7=0,last_5=null,string_3=null,span_4=0,last_3=null,span_6=0,last_2=null,span_9=0,last_7=null,span_0=1,span_5=0,item_kind='float',span_1=0,last_9=null,last_1=null,span_8=0,span_3=0,string_1=null,string_2=null,total_number=1,span_2=0,last_6=null,string_6=null,string_4=null,last_0='2017-07-17 00:10:20',min_value=0.4,others=0,max_value=0.4,string_0='0.4',last_4=null,string_7=null,string_9=null,last_8=null where group_id='駐車場 リパーク日本橋本町４丁目' and item_id='longitude'

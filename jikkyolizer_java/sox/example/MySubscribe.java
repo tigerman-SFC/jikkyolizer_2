@@ -125,7 +125,7 @@ public class MySubscribe implements SoxEventListener {
 		 */
 		outBuffer.flush();
 		upper_limit++ ;
-			if (upper_limit > 10){ 
+			if (upper_limit > 500){ 
 				//filewriter.close();
 				break; 
 			}
