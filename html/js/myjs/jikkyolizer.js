@@ -20,30 +20,40 @@ function start_new_voice(){
 
 function init_voice(){
 
-
+axios.defaults.xsrfCookieName = 'csrftoken';
+axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+past_voice = ['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''];
 
 voice_ajax = new Vue({
 	el:'.jikkyo',
 	data:{
 		during:0,
 		rest:0,
-		this_voice:'test-4.wav',
-		next_voice:'jikkyo_0.wav',
-		outer_voice:'/voices/test-4.wav'
+		this_voice:'9999998',
+		next_voice:'9999999',
+		outer_voice:'/voices/jikkyo-9999998.wav'
 	},
 	methods:{
 		go_to_next_voice:function(){
 			last_voice = this.this_voice;
 			this.this_voice=this.next_voice;
 			var params = new URLSearchParams();
-			params.append('used_voice', last_voice);
-			this.outer_voice = '/voices/' + this.this_voice;
+			for(i=0;i<24;i++){
+				past_voice[i] = past_voice[i+1];
+			}
+			past_voice[24] = this.this_voice;
+			for(i=0;i<25;i++){
+				params.append('used_voice'+String(i), past_voice[i]);
+			}
+			this.outer_voice = '/voices/jikkyo-' + this.this_voice + '.wav';
 			start_new_voice();
+			console.log(past_voice);
 			axios.post('/jikkyolizer/jikkyo_sox/new_voice/',params)
 			.then(res=>{
 				console.log(res);
 				console.log('OK');
-				alert(res.data);
+				//alert(res.data);
+				this.next_voice = res.data;
 			})
 			.catch(function (error){
 				console.log('NG');

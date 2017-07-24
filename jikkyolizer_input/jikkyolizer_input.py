@@ -1,6 +1,7 @@
 import sys
 #import pymysql
-#import time
+import time
+from datetime import datetime
 
 from jikkyolizer_da import JikkyolizerAccess
 from jikkyolizer_vocalize import JikkyolizerVocalize
@@ -10,15 +11,84 @@ def main(from_jikkyolizer_string):
 	group_id, item_id, raw_value, row_timestamp = parse_arg(from_jikkyolizer_string)
 	to_jikkyolizer_data = JikkyolizerAccess()
 	to_jikkyolizer_data.dict_insert('sox_data', { 'group_id':group_id, 'item_id':item_id, 'raw_value':raw_value, 'row_timestamp':row_timestamp } )
-	insert_jikkyolized(item_id, group_id, raw_value, row_timestamp, to_jikkyolizer_data)
-	insert_last_data(item_id, group_id, raw_value, row_timestamp, to_jikkyolizer_data)
-	#JikkyolizerVocalize(item_id, group_id, raw_value, row_timestamp)
-	#add_jikkyolized_item(item_id, )
+	jikkyolize_flag = insert_jikkyolized(item_id, group_id, raw_value, row_timestamp, to_jikkyolizer_data)
+	last_change = insert_last_data(item_id, group_id, raw_value, row_timestamp, to_jikkyolizer_data)
+	raw_ok, last_ok, jikkyolized_ok = check_too_past(to_jikkyolizer_data)
+	#raw_ok, last_ok, jikkyolized_ok = number_voices(to_jikkyolizer_data)
+	jikkyolized = 0
+	if jikkyolized_ok == 1:
+		if jikkyolize_flag == 'upper_jikkyolized':
+			JikkyolizerVocalize(item_id, group_id, raw_value, row_timestamp, 'upper_jikkyolized', 2, last_change)
+			jikkyolized = 1
+		elif jikkyolize_flag == 'lower_jikkyolized':
+			JikkyolizerVocalize(item_id, group_id, raw_value, row_timestamp, 'lower_jikkyolized', 2, last_change)
+			jikkyolized = 1
+		elif jikkyolize_flag == 'max_jikkyolized':
+			JikkyolizerVocalize(item_id, group_id, raw_value, row_timestamp, 'max_jikkyolized', 1, last_change)
+			jikkyolized = 1
+		elif jikkyolize_flag == 'min_jikkyolized':
+			JikkyolizerVocalize(item_id, group_id, raw_value, row_timestamp, 'min_jikkyolized', 1, last_change)
+			jikkyolized = 1
+	if last_ok == 1 and jikkyolized == 0 and last_change == 1:
+		JikkyolizerVocalize(item_id, group_id, raw_value, row_timestamp, 'last_changed', 3, last_change)
+		jikkyolized = 1
+	if raw_ok == 1 and jikkyolized == 0:
+		JikkyolizerVocalize(item_id, group_id, raw_value, row_timestamp, 'raw_data', 4, last_change)
+		jikkyolized = 1
+
+
+def check_too_past(fetch_past_data):
+	sql = 'select * from voice_prior;'
+	fetch_past_data.cursor.execute(sql)
+	number_data = fetch_past_data.cursor.fetchall()
+	i = 0
+	for number_datum in number_data:
+		
+		how_ago = int(time.mktime(datetime.now().timetuple())) - int(datetime.strptime(str(number_datum['insert_timestamp']), '%Y-%m-%d %H:%M:%S').strftime('%s'))
+		how_ago_minute = int(how_ago % 3600 / 60)
+		if how_ago_minute >= 2:
+			sql = 'delete from voice_prior where ID=' + str(number_datum['ID']) + ';'
+			fetch_past_data.cursor.execute(sql)
+			fetch_past_data.connector.commit()
+			i -= 1
+
+		i += 1
+	raw_ok, last_ok, jikkyolized_ok = number_voices(i)
+	return raw_ok, last_ok, jikkyolized_ok
+
+def number_voices(number_data):
+	#sql = 'select count(*) from voice_prior;'
+	#fetch_number_data.cursor.execute(sql)
+	#number_data = fetch_number_data.cursor.fetchone()
+	raw_ok = 0
+	last_ok = 0
+	jikkyolized_ok = 0
+	if number_data < 4:
+		raw_ok = 1
+	if number_data < 10:
+		last_ok = 1
+	if number_data < 20:
+		jikkyolized_ok = 1
+
+	return raw_ok, last_ok, jikkyolized_ok
+
+
 
 def insert_last_data(item_id, group_id, raw_value, row_timestamp, to_jikkyolizer_data):
+	sql = 'select * from sox_data_last where item_id=\'' + item_id + '\' and group_id=\'' + group_id + '\';'
+	to_jikkyolizer_data.cursor.execute(sql)
+	last_data = to_jikkyolizer_data.cursor.fetchone()
+	try:
+		if last_data['raw_value'] == raw_value:
+			change_flag = 0
+		else:
+			change_flag = 1
+	except:
+		change_flag = 0
 	sql = 'insert into sox_data_last(group_id, item_id, raw_value, row_timestamp) values(\'' + group_id + '\', \'' + item_id + '\', \'' + raw_value + '\', \'' + row_timestamp + '\') on duplicate key update raw_value=\'' + raw_value + '\', row_timestamp=\'' + row_timestamp + '\';'
 	to_jikkyolizer_data.cursor.execute(sql)
 	to_jikkyolizer_data.connector.commit()
+	return change_flag
 
 def parse_arg(from_jikkyolizer_string):
 	fj_string = from_jikkyolizer_string
@@ -44,7 +114,9 @@ def parse_arg(from_jikkyolizer_string):
 	return group_id, item_id, raw_value, timing
 
 def insert_jikkyolized(item_id, group_id, raw_value, row_timestamp, fetch_jikkyolized_data):
+	jikkyolized_flag = 'No'
 	re_calc_flag = 0
+	span_no = -1
 	#fetch_jikkyolized_data = JikkyolizerAccess()
 	sql = 'select * from sox_jikkyolized where item_id=\'' + item_id + '\' and group_id=\'' + group_id + '\';'
 	print (sql, flush=True)
@@ -96,27 +168,51 @@ def insert_jikkyolized(item_id, group_id, raw_value, row_timestamp, fetch_jikkyo
 			if distance == 0:
 				if raw_value == result['max_value']:
 					result['span_0'] += 1
-				else:
+				elif raw_value < result['min_value']:
 					re_calc('min', raw_value, result, fetch_jikkyolized_data)
+					jikkyolized_flag = 'min_jikkyolized'
+				elif raw_value > result['max_value']:
+					re_calc('max', raw_value, result, fetch_jikkyolized_data)
+					jikkyolized_flag = 'max_jikkyolized'
+
 			else:
 				if raw_value < result['min_value']:
 					re_calc('min', raw_value, result, fetch_jikkyolized_data)
+					jikkyolized_flag = 'min_jikkyolized'
 				elif raw_value > result['max_value']:
 					re_calc('max', raw_value, result, fetch_jikkyolized_data)
+					jikkyolized_flag = 'max_jikkyolized'
 				else:
 					for xi in range(10):
 						i = 9 - xi
 						if raw_value >= float(result['string_' + str(i)]):
 							result['span_' + str(i)] += 1
 							result['last_' + str(i)] = row_timestamp
+							span_no = i
 							break
 					#how_high = raw_value - result['min_value']
 					#span_no = str(int(how_high * 10 / distance))
 					#if span_no == 10:
 					#	span_no -= 1
 					#result[span_no] += 1
+					if jikkyolized_flag != 'min_jikkyolized' or jikkyolized_flag != 'max_jikkyolized':
+						###judge jikkyolized_flag
+						all_span = 0
+						for i in range(span_no + 1):
+							lower_span = result['span_' + str(i)]
+						for i in range(span_no, 10):
+							upper_span = result['span_' + str(i)]
+						lower_ratio = (lower_span - 1)/(result['total_number'] - 1)
+						upper_ratio = (upper_span - 1)/(result['total_number'] - 1)
+						if lower_ratio <= 0.1:
+							jikkyolized_flag = 'lower_jikkyolized'
+						if upper_ratio <= 0.1:
+							jikkyolized_flag = 'upper_jikkyolized'
+								
+						###
 
 		result['total_number'] += 1
+
 
 	update_dicts = result.copy()
 	del update_dicts['group_id']
@@ -144,7 +240,7 @@ def insert_jikkyolized(item_id, group_id, raw_value, row_timestamp, fetch_jikkyo
 	#fetch_jikkyolized_data.cursor.execute(sql)
 	#fetch_jikkyolized_data.connector.commit()
 
-	return 0
+	return jikkyolized_flag
 
 def re_calc(reason, raw_value, jikkyolized_data, fetch_jikkyolized_data):
 
@@ -164,17 +260,13 @@ def re_calc(reason, raw_value, jikkyolized_data, fetch_jikkyolized_data):
 	distance = max_value - min_value
 	if jikkyolized_data['item_kind'] == 'float':
 		for i in range(10):
-			jikkyolized_data['string_' + str(i)] = str(round(distance) * i / 10)
+			jikkyolized_data['string_' + str(i)] = str(round(distance) * i / 10 + min_value)
 			jikkyolized_data['span_' + str(i)] = 0
 	elif jikkyolized_data['item_kind'] == 'int':
 		for i in range(10):
-			if i >= 1:
-				if jikkyolized_data['string_' + str(i)] != jikkyolized_data['string_' + str(i-1)]:
-					jikkyolized_data['string_' + str(i)] = str(round(distance * i / 10))
-					jikkyolized_data['span_' + str(i)] = 0
-				else:
-					jikkyolized_data['string_' + str(i)] = None
-					jikkyolized_data['span_' + str(i)] = None
+			jikkyolized_data['string_' + str(i)] = str(round(distance * i / 10) + min_value)
+			jikkyolized_data['span_' + str(i)] = 0
+
 		
 	for past_datum in past_data:
 		for xi in range(10):

@@ -1,4 +1,4 @@
-from jikkyolizer_da2 import JikkyolizerAccess
+from jikkyolizer_da import JikkyolizerAccess
 import time
 from datetime import datetime
 import subprocess
@@ -25,7 +25,7 @@ class JikkyolizerVocalize():
 		else:
 			vocalize_sentence += str(how_ago_hour) + '時間まえ、'
 		
-		jikkyo_id5 = '{0:05d}'.format(jikkyo_id)
+		jikkyo_id7 = '{0:07d}'.format(jikkyo_id)
 		
 		if is_change == 1:
 			vocalize_sentence += group_id + 'の、' + item_id + 'の値が、' + raw_value + '、になりました。'
@@ -41,7 +41,7 @@ class JikkyolizerVocalize():
 		elif reason == 'min_jikkyolized':
 			vocalize_sentence += 'これは今までで最高の値です。'
 		
-		cmd = 'curl "https://api.voicetext.jp/v1/tts" -u "mpbw1hnrp32pdde7:" -d "text= \'' + vocalize_sentence + '\'" -d "speaker=hikari" -d "speed=100" -o /var/www/html/voices/jikkyo-' + jikkyo_id5 +'.wav'
+		cmd = 'curl "https://api.voicetext.jp/v1/tts" -u "mpbw1hnrp32pdde7:" -d "text= \'' + vocalize_sentence + '\'" -d "speaker=hikari" -d "speed=100" -o /var/www/html/voices/jikkyo-' + jikkyo_id7 +'.wav'
 
 		subprocess.call(cmd, shell=True) 
 

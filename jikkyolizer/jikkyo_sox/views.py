@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.base import TemplateView
 from django.http import HttpResponse as AjaxResponse
+from . import tools
 
 # Create your views here.
 
@@ -25,13 +26,15 @@ class NewVoice(LoginRequiredMixin, TemplateView):
 		#new_voice_no = tools.
 		#new_voice_no = '00001' 
 		test='A'
-		past_voices = []
-		for i in range(5):
-			past_voices.append(request.POST['used_voice' + str(i)])
-		#new_voice = tools.fetch_new_voice(past_voices)
-		return AjaxResponse(test)
+		past_voices = {}
+		for i in range(25):
+			past_voices[i] = (request.POST['used_voice' + str(i)])
+		new_voice = tools.fetch_new_voice(past_voices)
+		new_voice7 = '{0:07d}'.format(new_voice)
+		return AjaxResponse(new_voice7)
 
 	def get(self, request):
+		tools.fetch_new_voice({1:'1'})
 		return AjaxResponse('a')
 
 

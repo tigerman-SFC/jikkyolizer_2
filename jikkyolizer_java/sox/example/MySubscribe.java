@@ -125,11 +125,13 @@ public class MySubscribe implements SoxEventListener {
 		 * con.disconnect();
 		 */
 		outBuffer.flush();
+		/*
 		upper_limit++ ;
 			if (upper_limit > 500){ 
 				//filewriter.close();
 				break; 
 			}
+		*/
 		}
 
 		} catch (SmackException e) {

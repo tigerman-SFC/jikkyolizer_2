@@ -7,7 +7,7 @@ class JikkyolizerAccess(object):
 		#self.cursor = self.fetch_object['cursor']
 
 	def get_cursor_database_access(self):
-		self.connector = pymysql.connect(host="172.17.0.2", db="jikkyolizer_data", user="root", passwd="sqladmin", charset="utf8mb4", cursorclass=pymysql.cursors.DictCursor)
+		self.connector = pymysql.connect(host="172.17.0.3", db="jikkyolizer_data", user="root", passwd="sqladmin", charset="utf8mb4", cursorclass=pymysql.cursors.DictCursor)
 		self.cursor = self.connector.cursor()
 		#self.access_object = { 'connector' : self.connector, 'cursor' : self.connector.cursor()}
 		#return access_object
