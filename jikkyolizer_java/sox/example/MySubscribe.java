@@ -102,7 +102,8 @@ public class MySubscribe implements SoxEventListener {
 			l_p.waitFor();
 			outBuffer.write("2\n");
 		}
-
+		
+		
 		Data data = exampleDevice.getLastPublishData();
 		List<TransducerValue> values = data.getTransducerValue();
 		outBuffer.write("--last published data starts--" + "\n");
@@ -140,6 +141,10 @@ public class MySubscribe implements SoxEventListener {
 		} catch (XMPPException e) {
 		    // TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (NullPointerException e){
+			e.printStackTrace();
+		} catch (Exception e){
+			e.printStackTrace();	
 		}
 	}
 

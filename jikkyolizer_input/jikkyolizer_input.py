@@ -3,7 +3,7 @@ import sys
 #import time
 
 from jikkyolizer_da import JikkyolizerAccess
-
+from jikkyolizer_vocalize import JikkyolizerVocalize
 
 
 def main(from_jikkyolizer_string):
@@ -11,7 +11,14 @@ def main(from_jikkyolizer_string):
 	to_jikkyolizer_data = JikkyolizerAccess()
 	to_jikkyolizer_data.dict_insert('sox_data', { 'group_id':group_id, 'item_id':item_id, 'raw_value':raw_value, 'row_timestamp':row_timestamp } )
 	insert_jikkyolized(item_id, group_id, raw_value, row_timestamp, to_jikkyolizer_data)
+	insert_last_data(item_id, group_id, raw_value, row_timestamp, to_jikkyolizer_data)
+	#JikkyolizerVocalize(item_id, group_id, raw_value, row_timestamp)
 	#add_jikkyolized_item(item_id, )
+
+def insert_last_data(item_id, group_id, raw_value, row_timestamp, to_jikkyolizer_data):
+	sql = 'insert into sox_data_last(group_id, item_id, raw_value, row_timestamp) values(\'' + group_id + '\', \'' + item_id + '\', \'' + raw_value + '\', \'' + row_timestamp + '\') on duplicate key update raw_value=\'' + raw_value + '\', row_timestamp=\'' + row_timestamp + '\';'
+	to_jikkyolizer_data.cursor.execute(sql)
+	to_jikkyolizer_data.connector.commit()
 
 def parse_arg(from_jikkyolizer_string):
 	fj_string = from_jikkyolizer_string
@@ -70,36 +77,44 @@ def insert_jikkyolized(item_id, group_id, raw_value, row_timestamp, fetch_jikkyo
 			i = 0
 			others_flag = 1
 			for i in range(10):
-				if raw_value is None:
+				if raw_value == result['string_' + str(i)]:
+					result['span_' + str(i)] += 1
+					others_flag = 0
+					break
+				elif result['string_' + str(i)] is None:
 					others_flag = 0
 					result['string_' + str(i)] = raw_value
-					break
-				if raw_value == result[eval('string_' +str(i))]:
-					others_flag = 0
+					result['span_' + str(i)] += 1
 					break
 			if others_flag == 1:
 				result['others'] += 1
 			
 
-		if result['item_kind'] == 'int' or result['item_kind'] == 'float':
+		elif result['item_kind'] == 'int' or result['item_kind'] == 'float':
 			raw_value = eval(result['item_kind'])(raw_value)
 			distance = result['max_value'] - result['min_value']
 			if distance == 0:
 				if raw_value == result['max_value']:
 					result['span_0'] += 1
 				else:
-					re_calc('min', item_id, group_id, raw_value, row_timestamp)
+					re_calc('min', raw_value, result, fetch_jikkyolized_data)
 			else:
 				if raw_value < result['min_value']:
-					re_calc('min', item_id, result, fetch_jikkyolized_data)
-				if raw_value == result['max_value']:
-					re_calc('max', item_id, group_id, raw_value, row_timestamp, fetch_jikkyolized_data)
+					re_calc('min', raw_value, result, fetch_jikkyolized_data)
+				elif raw_value > result['max_value']:
+					re_calc('max', raw_value, result, fetch_jikkyolized_data)
 				else:
-					how_high = raw_value - result['min_value']
-					span_no = str(int(how_high * 10 / distance))
-					if span_no == 10:
-						span_no -= 1
-					result[span_no] += 1
+					for xi in range(10):
+						i = 9 - xi
+						if raw_value >= float(result['string_' + str(i)]):
+							result['span_' + str(i)] += 1
+							result['last_' + str(i)] = row_timestamp
+							break
+					#how_high = raw_value - result['min_value']
+					#span_no = str(int(how_high * 10 / distance))
+					#if span_no == 10:
+					#	span_no -= 1
+					#result[span_no] += 1
 
 		result['total_number'] += 1
 
@@ -131,38 +146,43 @@ def insert_jikkyolized(item_id, group_id, raw_value, row_timestamp, fetch_jikkyo
 
 	return 0
 
-def re_calc(reason, jikkyolized_data, fetch_jikkyolized_data):
+def re_calc(reason, raw_value, jikkyolized_data, fetch_jikkyolized_data):
 
-	sql = 'select * from sox_data where item_id=' + item_id + ' and group_id=' + group_id + ';'
+	sql = 'select * from sox_data where item_id=\'' + jikkyolized_data['item_id'] + '\' and group_id=\'' + jikkyolized_data['group_id'] + '\';'
 	fetch_jikkyolized_data.cursor.execute(sql)
-	past_data = cursor.fetchall()
+	past_data = fetch_jikkyolized_data.cursor.fetchall()
 	
 	max_value = jikkyolized_data['max_value']
 	min_value = jikkyolized_data['min_value']
 	if reason == 'max':
+		jikkyolized_data['max_value'] = raw_value
 		max_value = raw_value
 	elif reason == 'min':
+		jikkyolized_data['min_value'] = raw_value
 		min_value = raw_value
 
 	distance = max_value - min_value
 	if jikkyolized_data['item_kind'] == 'float':
 		for i in range(10):
-			jikkyolized_data['string_' + str(i)] = str(math.round(distance) * i / 10)
+			jikkyolized_data['string_' + str(i)] = str(round(distance) * i / 10)
 			jikkyolized_data['span_' + str(i)] = 0
 	elif jikkyolized_data['item_kind'] == 'int':
 		for i in range(10):
 			if i >= 1:
 				if jikkyolized_data['string_' + str(i)] != jikkyolized_data['string_' + str(i-1)]:
-					jikkyolized_data['string_' + str(i)] = str(math.round(distance * i / 10))
+					jikkyolized_data['string_' + str(i)] = str(round(distance * i / 10))
 					jikkyolized_data['span_' + str(i)] = 0
 				else:
 					jikkyolized_data['string_' + str(i)] = None
+					jikkyolized_data['span_' + str(i)] = None
 		
 	for past_datum in past_data:
-		for i in range(9):
-			if past_datum['raw_value'] >= jikkyolized_data['string_' + str(i)]:
+		for xi in range(10):
+			i = 9 - xi
+			if float(past_datum['raw_value']) >= float(jikkyolized_data['string_' + str(i)]):
 				jikkyolized_data['span_' + str(i)] += 1
 				jikkyolized_data['last_' + str(i)] = past_datum['row_timestamp']
+				break
 
 	return jikkyolized_data
 	
