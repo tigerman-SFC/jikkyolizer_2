@@ -27,7 +27,7 @@ class NewVoice(LoginRequiredMixin, TemplateView):
 		#new_voice_no = '00001' 
 		test='A'
 		past_voices = {}
-		for i in range(25):
+		for i in range(40):
 			past_voices[i] = (request.POST['used_voice' + str(i)])
 		new_voice = tools.fetch_new_voice(past_voices)
 		new_voice7 = '{0:07d}'.format(new_voice)

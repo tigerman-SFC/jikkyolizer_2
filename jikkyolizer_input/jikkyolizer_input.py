@@ -1,39 +1,50 @@
 import sys
 #import pymysql
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from jikkyolizer_da import JikkyolizerAccess
 from jikkyolizer_vocalize import JikkyolizerVocalize
+from jikkyolizer_relational import SearchRelation
 
 
 def main(from_jikkyolizer_string):
 	group_id, item_id, raw_value, row_timestamp = parse_arg(from_jikkyolizer_string)
+	d_time = datetime.strptime(row_timestamp, '%Y-%m-%d %H:%M:%S') + timedelta(minutes=21)
+	row_timestamp = d_time.strftime('%Y-%m-%d %H:%M:%S')
+	if judge_item_kind(raw_value) == float:
+		raw_value = '{0:4.4g}'.format(raw_value)
 	to_jikkyolizer_data = JikkyolizerAccess()
 	to_jikkyolizer_data.dict_insert('sox_data', { 'group_id':group_id, 'item_id':item_id, 'raw_value':raw_value, 'row_timestamp':row_timestamp } )
-	jikkyolize_flag = insert_jikkyolized(item_id, group_id, raw_value, row_timestamp, to_jikkyolizer_data)
+	jikkyolize_flag, rel_flag, relations = insert_jikkyolized(item_id, group_id, raw_value, row_timestamp, to_jikkyolizer_data)
 	last_change = insert_last_data(item_id, group_id, raw_value, row_timestamp, to_jikkyolizer_data)
 	raw_ok, last_ok, jikkyolized_ok = check_too_past(to_jikkyolizer_data)
+	item_blacklist = ['longitude', 'latitude', 'url', 'address', '運行状況', '遅延時配信日時', 'image', 'URL', 'TEL','ジャンル','住所','交通手段','営業時間']
+	if item_id in item_blacklist:
+		return 0
+	raw_value_blacklist = ['', '-']
+	if raw_value == raw_value_blacklist or len(raw_value)>200:
+		return 0
 	#raw_ok, last_ok, jikkyolized_ok = number_voices(to_jikkyolizer_data)
 	jikkyolized = 0
 	if jikkyolized_ok == 1:
 		if jikkyolize_flag == 'upper_jikkyolized':
-			JikkyolizerVocalize(item_id, group_id, raw_value, row_timestamp, 'upper_jikkyolized', 2, last_change)
+			JikkyolizerVocalize(item_id, group_id, raw_value, row_timestamp, 'upper_jikkyolized', 2, last_change, rel_flag, relations)
 			jikkyolized = 1
 		elif jikkyolize_flag == 'lower_jikkyolized':
-			JikkyolizerVocalize(item_id, group_id, raw_value, row_timestamp, 'lower_jikkyolized', 2, last_change)
+			JikkyolizerVocalize(item_id, group_id, raw_value, row_timestamp, 'lower_jikkyolized', 2, last_change, rel_flag, relations)
 			jikkyolized = 1
 		elif jikkyolize_flag == 'max_jikkyolized':
-			JikkyolizerVocalize(item_id, group_id, raw_value, row_timestamp, 'max_jikkyolized', 1, last_change)
+			JikkyolizerVocalize(item_id, group_id, raw_value, row_timestamp, 'max_jikkyolized', 1, last_change, rel_flag, relations)
 			jikkyolized = 1
 		elif jikkyolize_flag == 'min_jikkyolized':
-			JikkyolizerVocalize(item_id, group_id, raw_value, row_timestamp, 'min_jikkyolized', 1, last_change)
+			JikkyolizerVocalize(item_id, group_id, raw_value, row_timestamp, 'min_jikkyolized', 1, last_change, rel_flag, relations)
 			jikkyolized = 1
 	if last_ok == 1 and jikkyolized == 0 and last_change == 1:
-		JikkyolizerVocalize(item_id, group_id, raw_value, row_timestamp, 'last_changed', 3, last_change)
+		JikkyolizerVocalize(item_id, group_id, raw_value, row_timestamp, 'last_changed', 3, last_change, rel_flag, relations)
 		jikkyolized = 1
 	if raw_ok == 1 and jikkyolized == 0:
-		JikkyolizerVocalize(item_id, group_id, raw_value, row_timestamp, 'raw_data', 4, last_change)
+		JikkyolizerVocalize(item_id, group_id, raw_value, row_timestamp, 'raw_data', 4, last_change, rel_flag, relations)
 		jikkyolized = 1
 
 
@@ -46,7 +57,7 @@ def check_too_past(fetch_past_data):
 		
 		how_ago = int(time.mktime(datetime.now().timetuple())) - int(datetime.strptime(str(number_datum['insert_timestamp']), '%Y-%m-%d %H:%M:%S').strftime('%s'))
 		how_ago_minute = int(how_ago % 3600 / 60)
-		if how_ago_minute >= 2:
+		if how_ago_minute >= 4:
 			sql = 'delete from voice_prior where ID=' + str(number_datum['ID']) + ';'
 			fetch_past_data.cursor.execute(sql)
 			fetch_past_data.connector.commit()
@@ -63,11 +74,11 @@ def number_voices(number_data):
 	raw_ok = 0
 	last_ok = 0
 	jikkyolized_ok = 0
-	if number_data < 4:
+	if number_data < 8:
 		raw_ok = 1
-	if number_data < 10:
-		last_ok = 1
 	if number_data < 20:
+		last_ok = 1
+	if number_data < 40:
 		jikkyolized_ok = 1
 
 	return raw_ok, last_ok, jikkyolized_ok
@@ -210,9 +221,21 @@ def insert_jikkyolized(item_id, group_id, raw_value, row_timestamp, fetch_jikkyo
 							jikkyolized_flag = 'upper_jikkyolized'
 								
 						###
+		elif result['item_kind'] == 'str':
+			pass
 
 		result['total_number'] += 1
+	
+	rel_flag = 'No_relation'
+	relations = 'No'
 
+	SR = SearchRelation()
+	if result['group_relation'] is not None:
+		rel_flag = SR.fetch_relation(result['group_relation'], 'group', result['group_id'], raw_value)
+		relations = result['group_relation']
+	if result['item_relation'] is not None:
+		rel_flag = SR.fetch_relation(result['item_relation'], 'item', result['item_id'], raw_value)
+		relations = result['item_relation']
 
 	update_dicts = result.copy()
 	del update_dicts['group_id']
@@ -234,13 +257,25 @@ def insert_jikkyolized(item_id, group_id, raw_value, row_timestamp, fetch_jikkyo
 	if update_dicts['min_value'] is None:
 		update_dicts['min_value'] = 'null'
 
+	if update_dicts['item_relation'] is None:
+		update_dicts['item_relation'] = 'null'
+	else:
+		update_dicts['item_relation'] = '\'' + update_dicts['item_relation'] + '\''
+
+	if update_dicts['group_relation'] is None:
+		update_dicts['group_relation'] = 'null'
+	else:
+		update_dicts['group_relation'] = '\'' + update_dicts['group_relation'] + '\''
+
+
+
 	update_dicts['item_kind'] = '\'' + update_dicts['item_kind'] + '\''
 
 	fetch_jikkyolized_data.dict_update('sox_jikkyolized', update_dicts, where_dicts)
 	#fetch_jikkyolized_data.cursor.execute(sql)
 	#fetch_jikkyolized_data.connector.commit()
 
-	return jikkyolized_flag
+	return jikkyolized_flag, rel_flag, relations
 
 def re_calc(reason, raw_value, jikkyolized_data, fetch_jikkyolized_data):
 

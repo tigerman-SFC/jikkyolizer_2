@@ -14,6 +14,7 @@ def main(from_java_string):
 	item_id_start += len('item_id')
 	item_id_start += 1
 	item_id = fj_string[item_id_start:-1]
+	print (group_id + item_id, flush=True)
 	#items = []
 	to_jikkyolizer_data = JikkyolizerAccess()
 	#if item_id is None:  #false

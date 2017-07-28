@@ -40,12 +40,19 @@ class JikkyolizerAccess(object):
 		Values = update_dicts.values()
 		update_string = 'update ' + Table + ' set '
 		for Param,Value in zip(Params, Values):
+			#if isinstance(Value, str):
+			#	update_string += Param + '=\'' + str(Value) + '\','
+			#else:
 			update_string += Param + '=' + str(Value) + ','
+
 		update_string = update_string[:-1]
 		update_string += ' where '
 		where_params = where_dicts.keys()
 		where_values = where_dicts.values()
 		for where_param, where_value in zip(where_params, where_values):
+			#if isinstance(where_value, str):
+			#	update_string += where_param + '=\'' + str(where_value) + '\' and '
+			#else:
 			update_string += where_param + '=' + str(where_value) + ' and '
 		update_string = update_string[:-5]
 
@@ -55,7 +62,23 @@ class JikkyolizerAccess(object):
 		self.connector.commit()
 		return 0
 			
-		
+	def dict_select(self, table, where_dicts):
+		Params = where_dicts.keys()
+		Values = where_dicts.values()
+		sql = 'select * from ' + table + ' where '
+		i = 0
+		for param,value in zip(Params, Values):
+			if i == 1:
+				sql += ' and '
+			if isinstance(value, str):
+				sql += param + '=\'' + value + '\''
+			else:
+				sql += param + '=' + value
+			i = 1
+		print(sql)
+		self.cursor.execute(sql)
+		return self.cursor.fetchall()
+			
 
 
 
